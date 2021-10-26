@@ -1,0 +1,163 @@
+{% extends 'base.html' %} {% load static %} {% block content%}
+
+<div class="container-fluid">
+
+    <div class="row" style="display: flex;justify-content: space-around; padding-top: 10px;">
+       <div class=" flex-items"> <img src="{% static 'img/koalogo.png' %}" alt="logo"  style="width: 150px;"></div>
+        <div class=" flex-items"><h3 style="color:#17a2b8;font-weight: 800;">Payments Portal</h3></div>
+        <div class='flex-items'><a class='btn btn-outline-primary mr-1' href="{% url 'payment' %}">Make Payments</a>
+            <a class='btn btn-primary' href="{% url 'logout' %}">Logout</a></div>
+    </div>
+    <hr> {% comment %}
+    <div class="row align-items-center justify-content-center" style='flex-direction: column;'>
+        <div>
+            <h4>Account Balance : <span class="badge badge-info">{{bal}}</span></h4>
+        </div>
+    </div>
+    {% endcomment %}
+
+    <div class="row align-items-center justify-content-center" style="font-size: smaller">
+
+        <div class="container mt-5 mb-3">
+
+            <div class="row align-items-center justify-content-center">
+
+                <!--
+
+                <div class="row align-items-center justify-content-center mt-2 mb-3">
+                    <div class="mr-3">
+                        <label for="min">Min Date</label>
+                        <input type="text" id="min" name="min">
+                    </div>
+                    <div class="mr-3">
+                        <label for="max">Max date:</label>
+                        <input type="text" id="max" name="max">
+                    </div>
+                    <div> <button onClick="window.location.reload();" class="btn btn-info">Reset</button></div>
+                </div>
+
+                -->
+               
+
+                <div class="table-responsive-xl">
+                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th class="header" scope="col">Date</th>
+                            <th class="header" scope="col">Time</th>
+                            <!-- <th class="header" scope="col">#</th>-->
+                            <th class="header" scope="col">Reference</th>
+                            <!-- <th class="header" scope="col">ExternalID</th> -->
+                            <th class="header" scope="col">Name</th>
+                            <th class="header" scope="col">Community</th>
+                            <th class="header" scope="col">Momo Number</th>
+                            <th class="header" scope="col">Product Type</th>
+                            <th class="header" scope="col">Buckets</th>
+                            <th class="header" scope="col">Amount</th>
+                            <th class="header" scope="col">Status</th>
+                            <th class="header" scope="col">Reason</th>
+                            <th class="header" scope="col">Payment initiated By</th>
+                            
+
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in payments %}
+                        <tr>
+                            <td>{{i.date |date:'d/m/Y'}}</td>
+                            <td>{{i.date |time:"H:i"}}</td>
+                            {% comment %}
+                            <td>{{i.pk}}</td> {% endcomment %}
+                            <td>{{i.transactionId}}</td>
+                            {% comment %}
+                            <td>{{i.extid}}</td> {% endcomment %}
+                            <td>{{i.name}}</td>
+                            <td>{{i.community}}</td>
+                            <td>{{i.phoneNumber}}</td>
+                            <td>{{i.productType}}</td>
+                            <td>{{i.numberOfBuckets}}</td>
+                            <td>{{i.amountPaid}}</td>
+                            <td>{{i.status}}</td>
+                            <td>{{i.reason}}</td> 
+                            <td>{{i.paid_by}}</td>
+
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    /*    $(document).ready(function() {
+                $('#example').DataTable({
+
+
+
+                  //  "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50,100,"All"] ],
+                    
+                    "order": [
+                        [0, "desc"]
+                    ],
+                    dom: 'Bfrtip',
+                    buttons: [
+                    'pageLength','csv', 'pdf'
+                    ]
+                });
+            });
+
+        */
+
+    var minDate, maxDate;
+
+    // Custom filtering function which will search data in column four between two values
+    $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            var min = minDate.val();
+            var max = maxDate.val();
+            var date = new Date(data[0]);
+
+            if (
+                (min === null && max === null) ||
+                (min === null && date <= max) ||
+                (min <= date && max === null) ||
+                (min <= date && date <= max)
+            ) {
+                return true;
+            }
+            return false;
+        }
+    );
+
+    $(document).ready(function() {
+        // Create date inputs
+        minDate = new DateTime($('#min'), {
+            format: 'DD/MM/YYYY'
+        });
+        maxDate = new DateTime($('#max'), {
+            format: 'DD/MM/YYYY'
+        });
+
+        // DataTables initialisation
+        var table = $('#example').DataTable({
+            "order": [[0, "desc"]],
+            dom: 'Bfrtip',
+            buttons: ['pageLength', 'csv' // , 'pdf'
+            ]
+        });
+
+        // Refilter the table
+        $('#min, #max').on('change', function() {
+            table.draw();
+        });
+    });
+</script>
+
+{% endblock content%}

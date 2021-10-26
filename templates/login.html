@@ -1,0 +1,39 @@
+{% extends 'base.html' %} {% load static %} {% block content%}
+
+<div class="container">
+   
+
+        <div class="row align-items-center justify-content-center mt-5">           
+
+            <div class="wrap-login100  ">
+
+                <a class=" text-center d-block mb-20 p-b-40" href="/">
+                    <img src="{% static 'img/koalogo.png' %}" alt="logo" class="mb-1 mt-5" style="width: 35%;">
+                </a>
+
+                <div class="row align-items-center justify-content-center">
+                    <h3 style="color:#17a2b8;padding:10px;margin:15px;font-weight: 800;">Payments Portal</h3>
+                </div>
+
+                <div class="row justify-content-center align-items-center" id="ct" style="margin-top: 10%;">
+
+                    <form method="POST">{% csrf_token %}
+
+                        <!-- form variable -->
+                        {{ form.as_p }}
+
+
+                        <div class="container-login100-form-btn mb-4 mt-4">
+                            <input class="login100-form-btn" type="submit" name="sumbit">
+                        </div>
+                        <br>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+
+    
+
+    {% endblock content%}
